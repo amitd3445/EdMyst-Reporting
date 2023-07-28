@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+<html>
+    <head>           
+        <style>
+            @page {
+                size: Letter;
+
+                @top-center {
+                    content: element(pageHeader);
+                }
+
+                @bottom-left {
+                    content: string(heading);
+                    font-size: 9pt;
+                    height: 1cm;
+                    vertical-align: middle;
+                    width: 100%;
+                    text-transform: uppercase;
+                    margin-top: 1cm;
+                }
+
+                    @bottom-right {
+                    background: #14213d;
+                    color: #ffffff;
+                    content: counter(page);
+                    height: 1cm;
+                    text-align: center;
+                    width: 1cm;
+                    margin-top: 1cm;
+                }
+
+                    @bottom-center {
+                    background: #14213d;
+                    content: '';
+                    display: block;
+                    height: 0.05cm;
+                    opacity: 0.5;
+                    width: 100%;
+                    margin-top: 1cm;
+                }
+            }
+
+            @page :first {
+                background: url(/tmp/background.jpg) no-repeat center;
+                background-size:contain;
+                margin: 0;
+            }
+
+            html {
+            color: #393939;
+            font-family: Calibri;
+            font-size: 10pt;
+            font-weight: 300;
+            line-height: 1.25;
+            }
+
+            html body h1,
+            html body h2,
+            html body h3,
+            html body h4 {
+            margin: 0;
+            }
+
+            html body h1 {
+            color: #0d0c0c;
+            font-size: 16pt;
+            padding: 0;
+            margin: 0;
+            text-transform: uppercase;
+            border-bottom: solid 2px #cbd5e0;
+
+            }
+
+            html body h2 {
+            color: #106ba8;
+            font-size: 14pt;
+            padding: 0;
+            margin-bottom: 10px;
+            border-bottom: solid 3px #cbd5e0;
+            }
+
+            html body h3 {
+                color: #106ba8;
+                font-size: 12pt;
+                padding: 0;
+                margin: 0;
+            }
+
+            html body article#cover {
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            flex-wrap: wrap;
+            height: 297mm;
+            }
+
+            section {
+            margin-top: .5cm;
+            margin-bottom: 2cm;
+            }
+
+            html body article#cover section {
+            text-align: right;
+            }
+
+            ul.toc a::after {
+            text-align: right;
+            /* content: leader(' ') target-counter(attr(href url), page);   */
+            }
+
+            .toc {
+            list-style: none;
+            padding-left: 0;
+            }
+
+            .custom-link {
+            color: rgb(1, 1, 1); 
+            text-decoration: none; 
+            font-size: medium;
+            line-height: 1.75;
+            }
+
+            .tab {
+            padding-left: 40px; 
+            }
+
+            .vertical-flexbox {
+            display: flex;
+            flex-direction: column;
+            }
+
+            .horizontal-flexbox {
+            display: flex;
+            justify-content: space-between;
+            }
+
+            .vertical-flexbox-gauge {
+            width: 50%;
+            }
+
+            .vertical-flexbox-gauge p {
+            font-size: x-small;
+            }
+
+            .bar-charts {
+            width: 100%;
+            height: auto;
+            margin-left: auto;
+            margin-right: auto;
+            margin-top: 1cm;
+            margin-bottom: 5mm;
+            }
+
+            .line {
+            border: none;
+            border-top: 1px dashed black;
+            width: 100%;
+            margin-bottom: 5mm;
+            }
+
+            .medium-blue-text {
+            font-size: medium;
+            color: #106ba8;
+            }
+
+            .front-page-text {
+            text-align: left;
+            position: absolute;
+            top: 14cm;
+            left: 6.4cm;
+            }
+
+            .front-page-text p {
+            color: #106ba8;
+            font-size: 18pt;
+            font-weight: bold;
+            }
+
+            .front-page-text h3 {
+            color: #106ba8;
+            font-size: 24pt;
+            font-weight: bold;
+            }
+
+            .color-bar {
+                width: 100%;
+                height: auto;
+                margin-left: auto;
+                margin-right: auto;
+            }
+
+            .line-chart {
+                width: 100%;
+                height: auto;
+                margin-left: auto;
+                margin-right: auto;
+            }
+
+            .syled-table {
+                font-family: sans-serif;
+                box-shadow: 0 0 5px rgba(0, 0, 0, 0.15);
+            }
+            
+            .styled-table thead tr {
+                background-color: #009879;
+                color: #ffffff;
+                text-align: left;
+            }
+
+            .styled-table th,
+            .styled-table td {
+                padding: 8px 5px;
+                min-width: 100px; 
+                width: auto; 
+                text-align: left;
+                font-size: smaller;
+            }
+
+            .styled-table tbody tr {
+                border-bottom: 1px solid #EEEFEE;
+            }
+
+            .styled-table tbody tr:nth-of-type(even) {
+                background-color:#EEEFEE;
+            }
+
+
+            #header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            text-align: center;
+            color: darkgrey;
+            }
+
+            #spider {
+            display: block;
+            margin-top: 2cm;
+            margin-left: auto;
+            margin-right: auto;
+            width: 80%;
+            height: auto;
+            }
+        </style>
+    </head>
+
+    <body>
+
+        <header id="header" style="margin-top: -1.5cm">
+            <p>Assessment Report | {{ dict_payload['candidate_profile']['name'] }} | {{ date }}</p>
+        </header>
+
+    <!-- cover pic -->
+
+        <article id="cover">
+            <section>
+                <div class="front-page-text">
+                    <h3>ASSESSMENT REPORT</h3>
+                    <br>
+                    <p>{{ dict_payload['candidate_profile']['name']|upper }}</p>
+                    <p>{{ dict_payload['candidate_profile']['company_name']|upper }}</p>
+                    <p>{{ date }}</p>
+                </div>
+            </section>
+        </article>
+
+    <!-- content page -->
+        
+        <article style="page-break-before: always">
+            <section>
+                <h2>Contents</h2>
+                <ul class="toc">
+                    <li><a href="#page1" class="custom-link">INTRODUCTION</a></li>
+                    <li><a href="#page2" class="custom-link">OVERVIEW</a></li>
+                    <li><a href="#page3" class="custom-link">FOCUS AREAS</a></li>
+                    <li><a href="#page4" class="custom-link">SKILLS</a></li>
+                    <li><a href="#page5" class="custom-link">LEADERSHIP SKILLS</a></li>
+                    <li><a href="#page6" class="custom-link">COMMUNICATION ATTRIBUTES</a></li>
+                    <li><a href="#page7" class="custom-link">KEY PERFORMANCE STRENGTHS</a></li>
+                    <li><a href="#page8" class="custom-link">KEY IMPROVEMENT OPPORTUNITIES</a></li>
+                    <li><a href="#page9" class="custom-link">DISCLAIMER AND COPYRIGHT</a></li>
+                </ul>
+            </section>
+        </article>
+
+    <!-- summary page -->
+
+        <article style="page-break-before: always">
+            <section>
+                <h2 id="page1">INTRODUCTION</h2>
+                <p>This Leadership Report has been specifically crafted to assist you in navigating the development planning process. Its purpose is to help you integrate the outcomes from the EdMyst Assessment process into a comprehensive development plan. Whether used independently or alongside a formal coaching process, this report will prove effective.</p>
+                <p>Focused on your workplace performance, the Leadership Report examines both strengths and improvement opportunities. The strengths encompass the qualities that shape your impression on others and enable you to function optimally. On the other hand, the improvement opportunities refer to behavioral tendencies that could undermine your performance, impeding your effectiveness and eroding the quality of your relationships with customers, colleagues, and friends.</p>
+                <p>The primary goal of this report is to facilitate an understanding of your performance potential and identify any barriers that may hinder your achievements. As you review the information, it is important to consider three key points. First, only some statements may accurately reflect your self-perception. Second, everyone has inherent strengths and weaknesses, and any score can have positive and negative implications on performance. Lastly, focus on the overall themes presented in the report rather than getting caught up in individual details.</p>
+                <p>There are three ways in which this report can be utilized. Firstly, it provides a snapshot of your interpersonal performance within the workplace. Secondly, it serves as a tool to evaluate the alignment between your skills and the organization's expectations. Finally, it acts as a guide for contemplating performance improvement. When interpreting the results, it is essential to consider your own aspirations and goals, rather than assessing them in absolute terms.</p>
+            </section>
+        </article>      
+    
+    <!-- overview page -->
+
+        <article style="page-break-before: always">
+            <section>
+                <h2 id="page2">OVERVIEW</h2>
+                    <p>
+                        {% for skill in dict_bottom_top_skills['top_skills'] %}
+                            {{ dict_bottom_top_skills_text['top_skills'][skill]["Overview-Performance strength"] }}
+                        {% endfor %} 
+                    </p>
+                    <p>
+                        However,
+                        {% for skill in dict_bottom_top_skills['bottom_skills'] %}
+                            {% if loop.index == 1 %}
+                                {% set sentence = dict_bottom_top_skills_text['bottom_skills'][skill]["Overview-Improvement Opportunities"] %}
+                                {% set first_word = sentence.split()[0] %}
+                                {% set rest_of_sentence = sentence.split()[1:] | join(' ') %}
+                                {{ first_word.lower() }} {{ rest_of_sentence }}                            
+                            {% else %}
+                                {{ dict_bottom_top_skills_text['bottom_skills'][skill]["Overview-Improvement Opportunities"] }}
+                            {% endif %}
+                        {% endfor %} 
+                        Leadership development programs, mentorship, and coaching can provide valuable guidance and resources to overcome these challenges and further develop these essential leadership skills.
+                    </p>
+                <p></p>
+            </section>
+        </article>      
+
+    <!-- spider plot page -->
+
+        <article style="page-break-before: always">
+            <section>
+                <h2 id="page3">FOCUS AREAS</h2>
+                <img src="/tmp/focus_area_spider_plot.jpg" id="spider">
+            </section>
+        </article>  
+        
+    <!-- bar charts page -->
+
+        <article style="page-break-before: always">
+            <section>
+                <h2 id="page4">SKILLS</h2>
+                <div class="vertical-flexbox">
+                    <img src="/tmp/Architect.jpg" class="bar-charts">
+                    <img src="/tmp/Catalyst.jpg" class="bar-charts">
+                </div>
+            </section>
+        </article> 
+
+        <article style="page-break-before: always">
+            <section>
+                <h2>SKILLS</h2>
+                <div class="vertical-flexbox">
+                    <img src="/tmp/Coach.jpg" class="bar-charts">
+                    <img src="/tmp/Visionary.jpg" class="bar-charts">
+                </div>
+            </section>
+        </article> 
+
+    <!-- Leadership skills and the vertical gauge graphs -->
+
+        <article style="page-break-before: always">
+            <section>
+                <h2 id="page5">LEADERSHIP SKILLS</h2>
+                <p>Leadership skills are the abilities and qualities that enable individuals to guide, inspire, and influence others towards achieving a common goal or vision. These skills are essential for effective leadership and can be developed and honed through experience, training, and self-reflection.</p>
+                {% for focus_area, skill_dict in dict_all_skills_description|dictsort %}
+                    <h2>{{ focus_area.title() }}</h2>
+                    {% for skill, description in skill_dict|dictsort %}
+                        <div class="horizontal-flexbox">
+                            <div class="vertical-flexbox-gauge">
+                                <h4>{{ skill|lower }}</h4>
+                                <p>{{ description }}</p>
+                            </div>
+                            <img src="/tmp/{{ skill }}.jpg" style="width: 6cm; height: 2cm">
+                        </div>
+                        <div class="line"></div>
+                    {% endfor %}
+                {% endfor %}
+            </section>
+        </article> 
+
+        <!-- Communication Attributes -->
+
+        <article style="page-break-before: always">
+            <section>
+                <h2 id="page6">COMMUNICATION ATTRIBUTES</h2>
+
+                <br>
+                <br>
+                <br>
+                <br>
+                <table class="styled-table" style="border-style: solid;margin-left:auto;margin-right:auto; font-size: small;">
+                    <tr>
+                        <th>Attribute</th>
+                        <th>Summary</th>
+                    </tr>
+                    <tr>
+                        <td>Pace</td>
+                        <td>{{ dict_payload['pace']['measured']['average'] }} words per minute</td>
+                    </tr>
+                    <tr>
+                        <td>Pause</td>
+                        <td>{{ (dict_payload['pause']['inference']['total_pauses']|round(0)|string)[:-2] }} pauses</td>
+                    </tr>
+                    <tr>
+                        <td>Fillers</td>
+                        <td>{{ dict_payload['fillers']['total_words'] }} repetitions</td>
+                    </tr>
+                    <tr>
+                        <td>Repeated Words</td>
+                        <td>{{ dict_payload['repeated_words']['total_words'] }}</td>
+                    </tr>
+                    <tr>
+                        <td>Eye Contact</td>
+                        <td>{{ dict_payload['eye_contact']['average_percentage'] }}% of the time</td>
+                    </tr>
+                    <tr>
+                        <td>Smile</td>
+                        <td>{{ dict_payload['smile']['average_percentage'] }}% of the time</td>
+                    </tr>
+                    <tr>
+                        <td>Sentiment</td>
+                        <td>{{ dict_payload['sentiment']['assessment'] }}</td>
+                    </tr>
+                    <tr>
+                        <td>Volume</td>
+                        <td>{{ (dict_payload['volume']['inference']['result']['average_power']|round(0)|string )[:-2] }} dB</td>
+                    </tr>
+                </table>
+                
+
+            </section>
+        </article> 
+
+        <article style="page-break-before: always">
+            <section>
+                <div>
+                    <h3>Pace</h3>
+                    <br>
+                    <h4>Result</h4>
+                    <p>{{ dict_payload['pace']['inference']['message']['result'] }}</p>
+                    <img src="/tmp/pace_colorbar.jpg" class="color-bar">
+                    <h4>Detailed Analysis</h4>
+                    <p>{{ dict_payload['pace']['inference']['message']['inference'] }}</p>
+                    <img src="/tmp/pace_line_chart.jpg" class="line-chart">
+                    <h4>Recommendation</h4>
+                    <p>{{ dict_payload['pace']['inference']['message']['recommendation'] }}</p>
+                </div>
+
+            </section>
+        </article> 
+
+        <article style="page-break-before: always">
+            <section>
+                <div>
+                    <h3>Pause</h3>
+                    <br>
+                    <h4>Result</h4>
+                    <p>{{ dict_payload['pause']['inference']['result'] }}</p>
+                    <br>
+                    <table class="styled-table" style="border-style: solid; margin-left:auto;margin-right:auto; font-size: small;">
+                        <tr>
+                            <th>Types of Pauses</th>
+                            <th>Duration of Pause</th>
+                            <th>Number of Pauses</th>
+                        </tr>
+                        <tr>
+                            <td>Long Pauses</td>
+                            <td>Greater than 3.5 sec</td>
+                            <td>{{ (dict_payload['pause']['pauses_count_long']['data']['inference']['count']|string)[:-2] }}</td>
+                        </tr>
+                        <tr>
+                            <td>Strategic Pauses</td>
+                            <td>Between 2.5 to 3 sec</td>
+                            <td>{{ (dict_payload['pause']['pauses_count_strategic']['data']['inference']['count']|string)[:-2] }}</td>
+                        </tr>
+                        <tr>
+                            <td>Transition Pauses</td>
+                            <td>Between 1 to 2 sec</td>
+                            <td>{{ (dict_payload['pause']['pauses_count_transition']['data']['inference']['count']|string)[:-2] }}</td>
+                        </tr>
+                        <tr>
+                            <td>Sentence Pauses</td>
+                            <td>Between 0.5 to 1 sec</td>
+                            <td>{{ (dict_payload['pause']['pauses_count_sentence']['data']['inference']['count']|string)[:-2] }}</td>
+                        </tr>
+                        <tr>
+                            <td>Sensory Pauses</td>
+                            <td>Between 0.3 to 0.5 sec</td>
+                            <td>{{ (dict_payload['pause']['pauses_count_sensory']['data']['inference']['count']|string)[:-2] }}</td>
+                        </tr>
+                    </table>
+                    <br>
+                    <img src="/tmp/pauses_stacked_bar_chart.jpg" class="line-chart">
+                    <h4>Detailed Analysis</h4>
+                    <p>{{ dict_payload['pause']['inference']['message'] }}</p>
+                    <h4>Recommendation</h4>
+                    <p>{{ dict_payload['pause']['inference']['recommendation'] }}</p>
+                </div>
+                
+            </section>
+        </article> 
+
+        <article style="page-break-before: always">
+            <section>
+
+                <div>
+                    <h3>Fillers</h3>
+                    <br>
+                    <h4>Result</h4>
+                    <p>{{ dict_payload['fillers']['result'] }}</p>
+                    <div>
+                        {% if dict_payload['fillers']['data']|length > 0 %}
+                            <h4>Most Used Fillers</h4>
+                            <br>
+                            <table class="styled-table" style="border-style: solid; margin-left:auto;margin-right:auto; font-size: small;">
+                                <tr>
+                                    <th>Word</th>
+                                    <th>Repetitions</th>
+                                </tr>
+                                {% for dict_word_frequency in dict_payload['fillers']['data'] %}
+                                    <tr>
+                                        <td>{{ dict_word_frequency['word'] }}</td>
+                                        <td>{{ dict_word_frequency['count'] }}</td>
+                                    </tr>
+                                {% endfor %}
+                            </table>
+                            <br>
+                        {% endif %}
+                    </div>
+                    <h4>Detailed Analysis</h4>
+                    <p>{{ dict_payload['fillers']['analysis'] }}</p>
+                    <h4>Recommendation</h4>
+                    <p>{{ dict_payload['fillers']['recommendation'] }}</p>
+                </div>
+
+            </section>
+        </article> 
+
+        <article style="page-break-before: always">
+            <section>
+
+                <div>
+                    <h3>Repeated Words</h3>
+                    <br>
+                    <h4>Result</h5>
+                    <p>{{ dict_payload['repeated_words']['result'] }}</p>
+                    <div>
+                        {% if dict_payload['repeated_words']['data']|length > 0 %}
+                            <h4>Most Repeated Words</h4>
+                            <br>
+                            <table class="styled-table" style="border-style: solid; margin-left:auto;margin-right:auto; font-size: small;">
+                                <tr>
+                                    <th>Word</th>
+                                    <th>Repetitions</th>
+                                </tr>
+                                {% for dict_word_frequency in dict_payload['repeated_words']['data'] %}
+                                    <tr>
+                                        <td>{{ dict_word_frequency['word'] }}</td>
+                                        <td>{{ dict_word_frequency['count'] }}</td>
+                                    </tr>
+                                {% endfor %}
+                            </table>
+                            <br>
+                        {% endif %}
+                    </div>
+                    <h4>Detailed Analysis</h4>
+                    <p>{{ dict_payload['repeated_words']['analysis'] }}</p>
+                </div>
+
+            </section>
+        </article> 
+
+        <article style="page-break-before: always">
+            <section>
+
+                <div>
+                    <h3>Sentiment</h3>
+                    <br>
+                    <h4>Result</h4>
+                    <p>{{ dict_payload['sentiment']['inference']['result'] }}</p>
+                    <img src="/tmp/sentiment_colorbar.jpg" class="color-bar">
+                    <h4>Detailed Analysis</h4>
+                    <p>{{ dict_payload['sentiment']['inference']['message'] }}</p>
+                    <h4>Recommendation</h4>
+                    <p>{{ dict_payload['sentiment']['inference']['recommendation'] }}</p>
+                </div>
+
+                <div>
+                    <h3>Smile</h3>
+                    <br>
+                    <h4>Result</h4>
+                    <p>{{ dict_payload['smile']['result'] }}</p>
+                    <img src="/tmp/smile_colorbar.jpg" class="color-bar">
+                    <h4>Detailed Analysis</h4>
+                    <p>{{ dict_payload['smile']['inference'] }}</p>
+                    <h4>Recommendation</h4>
+                    <p>{{ dict_payload['smile']['recommendation'] }}</p>
+                </div>
+
+            </section>
+        </article> 
+
+        <article style="page-break-before: always">
+            <section>
+
+                <div>
+                    <h3>Volume</h3>
+                    <br>
+                    <h4>Result</h4>
+                    <p>{{ dict_payload['volume']['inference']['result']['message'] }}</p>
+                    <img src="/tmp/volume_colorbar.jpg" class="color-bar">
+                    <h4>Detailed Analysis</h4>
+                    <p>{{ dict_payload['volume']['inference']['message'] }}</p>
+                    <img src="/tmp/volume_line_chart.jpg" class="line-chart">
+                </div>
+
+            </section>
+        </article> 
+
+    <!-- Key Performance Strengths -->
+
+        <article style="page-break-before: always">
+            <section>
+                <h2 id="page7">KEY PERFORMANCE STRENGTHS</h2>
+                {% for skill in dict_bottom_top_skills['top_skills']|sort %}
+                    <h3>{{ skill.title() }}</h3>
+                    <p class="medium-blue-text">{{ dict_bottom_top_skills_text['top_skills'][skill]['Performance Strengths'][0] }}</p>
+                    <ul>
+                        {% for bullet in dict_bottom_top_skills_text['top_skills'][skill]['Performance Strengths'][1:] %}
+                            <li>{{ bullet }}</li>
+                        {% endfor %}
+                    </ul>
+                    <p class="medium-blue-text">To help you reflect on your strength, here are few self-reflection questions:</p>
+                    <ul>
+                        {% for bullet in dict_bottom_top_skills_text['top_skills'][skill]['Self-reflection Questions'] %}
+                            <li>{{ bullet }}</li>
+                        {% endfor %}
+                    </ul>
+                    <p class="medium-blue-text">To help you leverage your strength, here are some suggestions:</p>
+                    <ul>
+                        {% for bullet in dict_bottom_top_skills_text['top_skills'][skill]['Self-Development Tips - Strengths'] %}
+                            <li>{{ bullet }}</li>
+                        {% endfor %}
+                    </ul>
+                {% endfor %}
+            </section>
+        </article>       
+        
+    <!-- KEY IMPROVEMENT OPPORTUNITIES -->
+
+        <article style="page-break-before: always">
+            <section>
+                <h2 id="page8">KEY IMPROVEMENT OPPORTUNITIES</h2>
+                {% for skill in dict_bottom_top_skills['bottom_skills']|sort %}
+                    <h3>{{ skill.title() }}</h3>
+                    <p class="medium-blue-text">{{ dict_bottom_top_skills_text['bottom_skills'][skill]['Improvement Opportunities'][0] }}</p>
+                    <ul>
+                        {% for bullet in dict_bottom_top_skills_text['bottom_skills'][skill]['Improvement Opportunities'][1:] %}
+                            <li>{{ bullet }}</li>
+                        {% endfor %}
+                    </ul>
+                    <p class="medium-blue-text">To help you reflect on your development area, here are few self-reflection questions:</p>
+                    <ul>
+                        {% for bullet in dict_bottom_top_skills_text['bottom_skills'][skill]['Self-reflection Questions'] %}
+                            <li>{{ bullet }}</li>
+                        {% endfor %}
+                    </ul>
+                    <p class="medium-blue-text">To help you develop in this area, here are some suggestions:</p>
+                    <ul>
+                        {% for bullet in dict_bottom_top_skills_text['bottom_skills'][skill]['Self-Development Tips - Areas of Development'] %}
+                            <li>{{ bullet }}</li>
+                        {% endfor %}
+                    </ul>
+                {% endfor %}
+            </section>
+        </article>    
+
+    <!-- Disclaimer & Copyright -->
+
+        <article style="page-break-before: always">
+            <section>
+                <h3 style="text-decoration: underline; font-weight: bold; color: #106ba8;" id="page9">Disclaimer and Copyright</h3>
+                <br>
+                <h4 style="font-weight: bold;">Disclaimer</h4>
+                <p>This report is a property of {{ dict_payload['candidate_profile']['company_name'] }} and the information provided in the report is to be used only by the individual or entity to which it is addressed, else you are hereby notified that any dissemination, distribution or copying of this communication is strictly prohibited. The interpretive information contained in this report should be viewed as only one source of hypotheses about the individual/ group being evaluated. No decisions should be based solely on the information contained in this report. Any interpretation of this report should take into account ALL relevant input, such as real-world experience, skills, interests, abilities, the market being addressed, and the product being sold. This material should be integrated with all other sources of information in reaching professional decisions about this individual. This report is confidential and intended for use by qualified professionals only. </p>
+                <br>
+                <h4 style="font-weight: bold;">Intellectual Property</h4>
+                <p>The Content and Services of {{ dict_payload['candidate_profile']['company_name'] }}, as well as their selection and arrangement, are protected by copyright, trademark, patent, and/or other intellectual property laws, and any unauthorized use of the Content or Services may violate such laws and these Terms of Use. Except as expressly implied in these Terms of Use, {{ dict_payload['candidate_profile']['company_name'] }} does not grant any express rights to use the Content and/or Services. You have agreed not to copy, republish, frame, download, transmit, modify, rent, lease, loan, sell, assign, distribute, license, sublicense, reverse engineer, or create derivative works based on the Site, its Content, or its Services or their selection and arrangement, except as expressly authorized in these Terms of Use. In addition, you have agreed not to use any data mining, robots, or similar data gathering and extraction methods in connection with the {{ dict_payload['candidate_profile']['company_name'] }} database.</p>
+            </section>
+        </article>
+
+    </body>
+</html>

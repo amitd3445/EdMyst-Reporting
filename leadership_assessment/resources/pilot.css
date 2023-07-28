@@ -1,0 +1,187 @@
+@page {
+  size: Letter;
+
+  @top-center {
+      content: element(pageHeader);
+  }
+
+  @bottom-left {
+    content: string(heading);
+    font-size: 9pt;
+    height: 1cm;
+    vertical-align: middle;
+    width: 100%;
+    text-transform: uppercase;
+    margin-top: 1cm;
+}
+
+    @bottom-right {
+    background: #14213d;
+    color: #ffffff;
+    content: counter(page);
+    height: 1cm;
+    text-align: center;
+    width: 1cm;
+    margin-top: 1cm;
+}
+
+    @bottom-center {
+    background: #14213d;
+    content: '';
+    display: block;
+    height: 0.05cm;
+    opacity: 0.5;
+    width: 100%;
+    margin-top: 1cm;
+}
+}
+
+@page :first {
+    background: url(./background.jpg) no-repeat center;
+    background-size:contain;
+    margin: 0;
+  }
+
+html {
+  color: #393939;
+  font-family: Calibri;
+  font-size: 11pt;
+  font-weight: 300;
+  line-height: 1.25;
+}
+
+html body h1,
+html body h2,
+html body h3,
+html body h4 {
+  margin: 0;
+}
+
+html body h1 {
+  color: #0d0c0c;
+  font-size: 16pt;
+  padding: 0;
+  margin: 0;
+  text-transform: uppercase;
+  border-bottom: solid 2px #cbd5e0;
+
+}
+
+html body h2 {
+  color: #106ba8;
+  font-size: 14pt;
+  padding: 0;
+  margin-bottom: 10px;
+  border-bottom: solid 3px #cbd5e0;
+}
+
+html body h3 {
+    color: #106ba8;
+    font-size: 12pt;
+    padding: 0;
+    margin: 0;
+  }
+
+html body article#cover {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  height: 297mm;
+}
+
+section {
+  margin-top: .5cm;
+  margin-bottom: 2cm;
+}
+
+html body article#cover section {
+  text-align: right;
+}
+
+ul.toc a::after {
+  content: leader(' ') target-counter(attr(href url), page);  
+}
+
+.toc {
+  list-style: none;
+  padding-left: 0;
+}
+
+.custom-link {
+  color: rgb(1, 1, 1); 
+  text-decoration: none; 
+  font-weight: bold;
+  font-size: medium;
+}
+
+.tab {
+  padding-left: 40px; 
+}
+
+.vertical-flexbox {
+  display: flex;
+  flex-direction: column;
+}
+
+.horizontal-flexbox {
+  display: flex;
+  justify-content: space-between;
+}
+
+.vertical-flexbox-gauge {
+  width: 50%;
+}
+
+.vertical-flexbox-gauge p {
+  font-size: x-small;
+}
+
+.bar-charts {
+  height: 5cm;
+  width: 15cm;
+  margin-left: 1cm;
+  margin-bottom: 5mm;
+}
+
+.line {
+  border: none;
+  border-top: 1px dashed black;
+  width: 100%;
+  margin-bottom: 5mm;
+}
+
+.medium-blue-text {
+  font-size: medium;
+  color: #106ba8;
+}
+
+.front-page-text {
+  text-align: left;
+  position: absolute;
+  top: 14cm;
+  left: 6.4cm;
+}
+
+.front-page-text p {
+  color: #106ba8;
+  font-size: 18pt;
+  font-weight: bold;
+}
+
+#header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  text-align: center;
+  color: darkgrey;
+}
+
+#spider {
+  display: block;
+  margin-top: 2cm;
+  margin-left: auto;
+  margin-right: auto;
+  width: 80%;
+  height: auto;
+}
